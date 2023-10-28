@@ -36,7 +36,7 @@ jobs:
 
     - shell: msys2 {0}
       run: |
-        pacman -S --needed \
+        pacman -S --needed --noconfirm \
           mingw-w64-x86_64-autotools \
           mingw-w64-x86_64-cmake \
           mingw-w64-x86_64-glew \
