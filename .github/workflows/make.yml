@@ -11,7 +11,7 @@ on:
 env:
   # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
   BUILD_TYPE: Release
-  DRV_DEPS_QT5_LOCATION: "${QT_ROOT_DIR}"
+  DRV_DEPS_QT5_LOCATION: '${{ github.workspace }}/qt/'
 
 jobs:
   build:
@@ -28,6 +28,23 @@ jobs:
       
     - name: Install Qt
       uses: jurplel/install-qt-action@v3
+      with:
+        version: '5.15.2'
+        host: 'windows'
+        target: 'desktop'
+        arch: 'win64_msvc2019_64'
+        dir: '${{ github.workspace }}/qt/'
+        install-deps: 'true'
+        modules: 'qtcharts qtwebengine'
+        archives: 'qtbase qtsvg'
+        cache: 'false'
+        cache-key-prefix: 'install-qt-action'
+        setup-python: 'true'
+        set-env: 'true'
+        tools-only: 'false'
+        aqtversion: '==3.1.*'
+        py7zrversion: '==0.20.*'
+        extra: '--external 7z'
 
     - uses: shogo82148/actions-setup-perl@v1
       with:
