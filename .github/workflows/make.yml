@@ -85,6 +85,7 @@ jobs:
     runs-on: windows-latest
     needs: setup_CMake
     steps:
+    - uses: actions/checkout@v4
     - name: Init cache QT
       id: init_qt_cache
       uses: actions/cache/@v3
@@ -96,8 +97,6 @@ jobs:
       # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
       # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
       run: |
-        cd ${{env.DRV_DEPS_QT5_LOCATION}}/Qt/5.15.2/msvc2019_64
-        ls
         cmake -S . -B ./build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DRV_DEPS_QT5_LOCATION=D:\a\OpenRV\Qt\5.15.2\msvc2019_64\
       
     - name: Build
