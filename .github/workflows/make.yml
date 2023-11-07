@@ -23,7 +23,7 @@ jobs:
       id: init_qt_cache
       uses: actions/cache/@v3
       with:
-        path: ${{ env.Qt5_DIR }}
+        path: ${{ env.DRV_DEPS_QT5_LOCATION }}
         key: ${{ runner.os }}-qt-${{ env.Qt5_DIR }}-5.15.2
 
     - name: MSVC
@@ -49,6 +49,11 @@ jobs:
         aqtversion: '==3.1.*'
         py7zrversion: '==0.20.*'
         extra: '--external 7z'
+        
+    - name: Debug
+      run: |
+        ls D:\a\OpenRV\Qt\5.15.2\msvc2019_64\
+      shell: pwsh
 
   setup_CMake:
     needs: install_Qt5
