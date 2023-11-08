@@ -100,7 +100,7 @@ jobs:
         [Environment]::SetEnvironmentVariable('Path', [Environment]::GetEnvironmentVariable('Path', 'Machine')+';${{env.DRV_DEPS_QT5_LOCATION}}Qt\5.15.2\msvc2019_64\bin', [System.EnvironmentVariableTarget]::Machine)
         [Environment]::SetEnvironmentVariable('CMAKE_PREFIX_PATH', [Environment]::GetEnvironmentVariable('CMAKE_PREFIX_PATH', 'Machine')+';${{env.DRV_DEPS_QT5_LOCATION}}Qt\5.15.2\msvc2019_64\', [System.EnvironmentVariableTarget]::Machine)
        
-        cmake -S . -B ./build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DRV_DEPS_QT5_LOCATION=D:\a\OpenRV\Qt\5.15.2\msvc2019_64\
+        cmake -S . -B ./build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DRV_DEPS_QT5_LOCATION=D:\a\OpenRV\Qt\5.15.2\msvc2019_64\ -DCMAKE_PREFIX_PATH=${{env.DRV_DEPS_QT5_LOCATION}}Qt\5.15.2\msvc2019_64\
       
     - name: Build
       # Build your program with the given configuration
