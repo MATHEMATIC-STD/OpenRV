@@ -97,8 +97,8 @@ jobs:
       # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
       # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
       run: |
-        [Environment]::SetEnvironmentVariable('Path', [Environment]::GetEnvironmentVariable('Path', 'Machine')+';$(${{env.DRV_DEPS_QT5_LOCATION}})Qt\5.15.2\msvc2019_64\bin', [System.EnvironmentVariableTarget]::Machine)
-        [Environment]::SetEnvironmentVariable('CMAKE_PREFIX_PATH', [Environment]::GetEnvironmentVariable('CMAKE_PREFIX_PATH', 'Machine')+';$(${{env.DRV_DEPS_QT5_LOCATION}})Qt\5.15.2\msvc2019_64\', [System.EnvironmentVariableTarget]::Machine)
+        [Environment]::SetEnvironmentVariable('Path', [Environment]::GetEnvironmentVariable('Path', 'Machine')+';${{env.DRV_DEPS_QT5_LOCATION}}Qt\5.15.2\msvc2019_64\bin', [System.EnvironmentVariableTarget]::Machine)
+        [Environment]::SetEnvironmentVariable('CMAKE_PREFIX_PATH', [Environment]::GetEnvironmentVariable('CMAKE_PREFIX_PATH', 'Machine')+';${{env.DRV_DEPS_QT5_LOCATION}}Qt\5.15.2\msvc2019_64\', [System.EnvironmentVariableTarget]::Machine)
        
         cmake -S . -B ./build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DRV_DEPS_QT5_LOCATION=D:\a\OpenRV\Qt\5.15.2\msvc2019_64\
       
