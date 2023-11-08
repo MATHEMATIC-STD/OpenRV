@@ -99,7 +99,9 @@ jobs:
       run: |
         [Environment]::SetEnvironmentVariable('Path', [Environment]::GetEnvironmentVariable('Path', 'Machine')+';${{env.DRV_DEPS_QT5_LOCATION}}Qt\5.15.2\msvc2019_64\bin', [System.EnvironmentVariableTarget]::Machine)
         [Environment]::SetEnvironmentVariable('CMAKE_PREFIX_PATH', [Environment]::GetEnvironmentVariable('CMAKE_PREFIX_PATH', 'Machine')+';${{env.DRV_DEPS_QT5_LOCATION}}Qt\5.15.2\msvc2019_64\', [System.EnvironmentVariableTarget]::Machine)
-       
+        ls D:\a\OpenRV\Qt\5.15.2\msvc2019_64\
+        ls D:\a\OpenRV\Qt\5.15.2\msvc2019_64\lib
+        ls D:\a\OpenRV\Qt\5.15.2\msvc2019_64\include
         cmake -S . -B ./build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DRV_DEPS_QT5_LOCATION=D:\a\OpenRV\Qt\5.15.2\msvc2019_64\ -DCMAKE_PREFIX_PATH=${{env.DRV_DEPS_QT5_LOCATION}}Qt\5.15.2\msvc2019_64\
       
     - name: Build
