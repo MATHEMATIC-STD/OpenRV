@@ -33,7 +33,7 @@ jobs:
     - name: Clean cache QT
       if: steps.init_qt_cache.outputs.cache-hit != 'true'
       run: |
-        rm -r -Force ${{ env.DRV_DEPS_QT5_LOCATION }}
+        rm -r -Force ${{ env.DRV_DEPS_QT5_LOCATION }} -ErrorAction SilentlyContinue
 
     - name: Install Qt
       if: steps.init_qt_cache.outputs.cache-hit != 'true'
