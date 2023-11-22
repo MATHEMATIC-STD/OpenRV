@@ -29,7 +29,12 @@ jobs:
 
     - name: MSVC
       uses: ilammy/msvc-dev-cmd@v1.4.1
-      
+    
+    - name: Clean cache QT
+      if: steps.init_qt_cache.outputs.cache-hit != 'true'
+      run: |
+        rm-rf ${{ env.DRV_DEPS_QT5_LOCATION }}
+
     - name: Install Qt
       if: steps.init_qt_cache.outputs.cache-hit != 'true'
       uses: jurplel/install-qt-action@v3
@@ -38,7 +43,7 @@ jobs:
         host: 'windows'
         target: 'desktop'
         arch: 'win64_msvc2019_64'
-        dir: '${{ github.workspace }}/qt/'
+        dir: '${{ env.DRV_DEPS_QT5_LOCATION }}'
         install-deps: 'true'
         modules: 'qtcharts qtwebengine qtquick3d'
         archives: 'qtbase qtsvg'
