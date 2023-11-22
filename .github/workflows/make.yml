@@ -111,8 +111,4 @@ jobs:
     - name: Upload artifact
       uses: actions/upload-pages-artifact@v1
       with: 
-        path: './docs/.vitepress/dist'
-
-    - name: Test
-      working-directory: /c/OpenRV/_install
-      
+        path: '/c/OpenRV/_install'
