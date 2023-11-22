@@ -12,6 +12,7 @@ env:
   # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
   BUILD_TYPE: Release
   DRV_DEPS_QT5_LOCATION: '${{ github.workspace }}/qt/'
+  MSYS: 'winsymlinks:nativestrict'
 
 jobs:
   install_Qt5:
@@ -50,13 +51,14 @@ jobs:
         py7zrversion: '==0.20.*'
         extra: '--external 7z'
 
-  setup_CMake:
+  setup_MSYS2:
     needs: install_Qt5
     runs-on: windows-latest
     steps:
     - uses: shogo82148/actions-setup-perl@v1
       with:
         perl-version: '5.34'
+
     - name: MSYS2
       uses: msys2/setup-msys2@v2
 
@@ -80,10 +82,13 @@ jobs:
           patch \
           unzip \
           zip
-
+          
+          SETUPTOOLS_USE_DISTUTILS=stdlib pip install py7zr
+          cd /c/msys64 && ln -sfr . msys64
+          cd /c/Qt && ln -sfr . Qt && ln -sfr . Qt5.15.2
   build:
     runs-on: windows-latest
-    needs: setup_CMake
+    needs: setup_MSYS2
     steps:
     - uses: actions/checkout@v4
     - name: Init cache QT
@@ -93,23 +98,21 @@ jobs:
         path: ${{ env.DRV_DEPS_QT5_LOCATION }}
         key: ${{ runner.os }}-qt-5.15.2
 
-    - name: Configure CMake
-      # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
-      # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
+    - name: Configure MSYS2
+      shell: msys2 {0}
       run: |
-        [Environment]::SetEnvironmentVariable('Path', [Environment]::GetEnvironmentVariable('Path', 'Machine')+';${{env.DRV_DEPS_QT5_LOCATION}}Qt\5.15.2\msvc2019_64\bin', [System.EnvironmentVariableTarget]::Machine)
-        [Environment]::SetEnvironmentVariable('CMAKE_PREFIX_PATH', [Environment]::GetEnvironmentVariable('CMAKE_PREFIX_PATH', 'Machine')+';${{env.DRV_DEPS_QT5_LOCATION}}Qt\5.15.2\msvc2019_64\', [System.EnvironmentVariableTarget]::Machine)
-        ls D:\a\OpenRV\Qt\5.15.2\msvc2019_64\
-        ls D:\a\OpenRV\Qt\5.15.2\msvc2019_64\lib
-        ls D:\a\OpenRV\Qt\5.15.2\msvc2019_64\include
-        cmake -S . -B ./build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DRV_DEPS_QT5_LOCATION=D:\a\OpenRV\Qt\5.15.2\msvc2019_64\ -DCMAKE_PREFIX_PATH=${{env.DRV_DEPS_QT5_LOCATION}}Qt\5.15.2\msvc2019_64\
-      
-    - name: Build
-      # Build your program with the given configuration
-      run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}} -DRV_DEPS_QT5_LOCATION=D:\a\OpenRV\Qt\5.15.2\msvc2019_64\ -DQt5_DIR=${{env.DRV_DEPS_QT5_LOCATION}}\Qt\
+        cd /c
+        git clone --recursive https://github.com/AcademySoftwareFoundation/OpenRV.git
+        cd /c/OpenRV
+        source ./rvcmds.sh
+        rvbootstrap Release
+        rvinst
+
+    - name: Upload artifact
+      uses: actions/upload-pages-artifact@v1
+        with: 
+        path: './docs/.vitepress/dist'
 
     - name: Test
-      working-directory: ${{github.workspace}}/build
-      # Execute tests defined by the CMake configuration.
-      # See https://cmake.org/cmake/help/latest/manual/ctest.1.html for more detail
-      run: ctest -C ${{env.BUILD_TYPE}}
+      working-directory: /c/OpenRV/_install
+      
