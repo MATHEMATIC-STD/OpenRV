@@ -84,47 +84,47 @@ jobs:
         ls C:/
         ls ${{ env.STRAWBERRY_ROOT_DIR }}
 
-  install_MSYS2:
-    runs-on: windows-latest
+  # install_MSYS2:
+  #   runs-on: windows-latest
 
-    steps:
-    - name: Init msys cache
-      id: init_msys_cache
-      uses: actions/cache/@v3
-      with:
-        path: ${{ env.MSYS_ROOT_DIR }}
-        key: ${{ runner.os }}-msys2
+  #   steps:
+  #   - name: Init msys cache
+  #     id: init_msys_cache
+  #     uses: actions/cache/@v3
+  #     with:
+  #       path: ${{ env.MSYS_ROOT_DIR }}
+  #       key: ${{ runner.os }}-msys2
 
-    - name: MSYS2
-      if: steps.init_msys_cache.outputs.cache-hit != 'true'
-      uses: msys2/setup-msys2@v2
-      with:
-        location: ${{ env.INSTALL_ROOT_DIR }}
-        install: mingw-w64-x86_64-toolchain
+  #   - name: MSYS2
+  #     if: steps.init_msys_cache.outputs.cache-hit != 'true'
+  #     uses: msys2/setup-msys2@v2
+  #     with:
+  #       location: ${{ env.INSTALL_ROOT_DIR }}
+  #       install: mingw-w64-x86_64-toolchain
 
-    - shell: msys2 {0}
-      if: steps.init_msys_cache.outputs.cache-hit != 'true'
-      run: |
-        pacman -S --needed --noconfirm \
-          mingw-w64-x86_64-autotools \
-          mingw-w64-x86_64-cmake \
-          mingw-w64-x86_64-glew \
-          mingw-w64-x86_64-libarchive \
-          mingw-w64-x86_64-make \
-          mingw-w64-x86_64-meson \
-          mingw-w64-x86_64-python-pip \
-          mingw-w64-x86_64-python-psutil \
-          mingw-w64-x86_64-toolchain \
-          bison \
-          flex \
-          git \
-          nasm \
-          p7zip \
-          patch \
-          unzip \
-          zip
+  #   - shell: mingw64 {0}
+  #     if: steps.init_msys_cache.outputs.cache-hit != 'true'
+  #     run: |
+  #       pacman -S --needed --noconfirm \
+  #         mingw-w64-x86_64-autotools \
+  #         mingw-w64-x86_64-cmake \
+  #         mingw-w64-x86_64-glew \
+  #         mingw-w64-x86_64-libarchive \
+  #         mingw-w64-x86_64-make \
+  #         mingw-w64-x86_64-meson \
+  #         mingw-w64-x86_64-python-pip \
+  #         mingw-w64-x86_64-python-psutil \
+  #         mingw-w64-x86_64-toolchain \
+  #         bison \
+  #         flex \
+  #         git \
+  #         nasm \
+  #         p7zip \
+  #         patch \
+  #         unzip \
+  #         zip
           
-          SETUPTOOLS_USE_DISTUTILS=stdlib pip install py7zr
+  #         SETUPTOOLS_USE_DISTUTILS=stdlib pip install py7zr
 
   build:
     runs-on: windows-latest
@@ -148,22 +148,28 @@ jobs:
         path: ${{ env.STRAWBERRY_ROOT_DIR }}
         key: ${{ runner.os }}-strawberry
 
-    - name: Init MSYS2 cache
-      id: init_msys2_cache
-      uses: actions/cache/@v3
-      with:
-        path: ${{ env.MSYS_ROOT_DIR }}
-        key: ${{ runner.os }}-msys2
+    # - name: Init MSYS2 cache
+    #   id: init_msys2_cache
+    #   uses: actions/cache/@v3
+    #   with:
+    #     path: ${{ env.MSYS_ROOT_DIR }}
+    #     key: ${{ runner.os }}-msys2
 
     - name: Add MSYS and Strawberry binary to PATH
       run: |
-        echo "::add-path::${{ env.MSYS_ROOT_DIR }}"
+        # echo "::add-path::${{ env.MSYS_ROOT_DIR }}"
         echo "::add-path::${{ env.STRAWBERRY_ROOT_DIR }}/bin"
         echo "::add-path::${{ env.STRAWBERRY_ROOT_DIR }}/perl/bin"
         echo "::add-path::${{ env.STRAWBERRY_ROOT_DIR }}/c/bin"
 
+    - name: mingw64
+      uses: msys2/setup-msys2@v2
+      with:
+        location: ${{ env.INSTALL_ROOT_DIR }}
+        install: mingw-w64-x86_64-toolchain
+
     - name: Build
-      shell: mingw64
+      shell: mingw64 {0}
       run: |
         ls /c
         cd /c/msys64 && ln -sfr . msys64
