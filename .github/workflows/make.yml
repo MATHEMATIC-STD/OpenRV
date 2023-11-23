@@ -123,7 +123,6 @@ jobs:
   #         patch \
   #         unzip \
   #         zip
-          
   #         SETUPTOOLS_USE_DISTUTILS=stdlib pip install py7zr
 
   build:
@@ -152,22 +151,17 @@ jobs:
             
     - name: Add MSYS and Strawberry binary to PATH
       run: |
-        echo "::add-path::${{ env.STRAWBERRY_ROOT_DIR }}/bin"
-        echo "::add-path::${{ env.STRAWBERRY_ROOT_DIR }}/perl/bin"
-        echo "::add-path::${{ env.STRAWBERRY_ROOT_DIR }}/c/bin"
-    # - name: Init MSYS2 cache
-    #   id: init_msys2_cache
-    #   uses: actions/cache/@v3
-    #   with:
-    #     path: ${{ env.MSYS_ROOT_DIR }}
-    #     key: ${{ runner.os }}-msys2
-    - name: MSYS2
+        echo "${{ env.STRAWBERRY_ROOT_DIR }}/bin" >> $GITHUB_PATH
+        echo "${{ env.STRAWBERRY_ROOT_DIR }}/perl/bin" >> $GITHUB_PATH
+        echo "${{ env.STRAWBERRY_ROOT_DIR }}/c/bin" >> $GITHUB_PATH
+
+    - name: MSYS2 setup
       uses: msys2/setup-msys2@v2
       with:
         location: ${{ env.INSTALL_ROOT_DIR }}
         install: mingw-w64-x86_64-toolchain
 
-    - shell: C:/msys64/mingw64.exe {0}
+    - name: Build
       run: |
         pacman -S --needed --noconfirm \
           mingw-w64-x86_64-autotools \
