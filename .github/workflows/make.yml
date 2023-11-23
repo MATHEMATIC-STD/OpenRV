@@ -187,16 +187,16 @@ jobs:
           patch \
           unzip \
           zip
-          
-          SETUPTOOLS_USE_DISTUTILS=stdlib pip install py7zr
-          cd /c/msys64 && ln -sfr . msys64
-          cd /c/Qt && ln -sfr . Qt && ln -sfr . Qt5.15.2
-          cd /c
-          git clone --recursive https://github.com/AcademySoftwareFoundation/OpenRV.git
-          cd /c/OpenRV
-          source ./rvcmds.sh
-          rvbootstrap Release
-          rvinst
+
+        SETUPTOOLS_USE_DISTUTILS=stdlib pip install py7zr
+        cd /c/msys64 && ln -sfr . msys64
+        cd /c/Qt && ln -sfr . Qt && ln -sfr . Qt5.15.2
+        cd /c
+        git clone --recursive https://github.com/AcademySoftwareFoundation/OpenRV.git
+        cd /c/OpenRV
+        source ./rvcmds.sh
+        rvbootstrap Release
+        rvinst
 
     - name: Upload artifact
       uses: actions/upload-pages-artifact@v1
