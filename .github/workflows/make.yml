@@ -170,7 +170,7 @@ jobs:
         cd /c
 
     - name: Clone
-      shell: C:/msys64/mingw64 {0}
+      shell: C:/msys64/mingw64.exe {0}
       run: |
         cd /c
         git clone --recursive https://github.com/AcademySoftwareFoundation/OpenRV.git
