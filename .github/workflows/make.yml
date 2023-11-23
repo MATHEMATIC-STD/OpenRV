@@ -124,7 +124,7 @@ jobs:
       - install_Qt5
       - install_strawberry
       - install_MSYS2
-
+    steps:
     - name: Init QT cache
       id: init_qt_cache
       uses: actions/cache/@v3
