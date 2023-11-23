@@ -71,7 +71,6 @@ jobs:
         path: ${{ env.STRAWBERRY_ROOT_DIR }}
         key: ${{ runner.os }}-strawberry
 
-    steps:
     - uses: shogo82148/actions-setup-perl@v1
       if: steps.init_strawberry_cache.outputs.cache-hit != 'true'
       with:
