@@ -155,12 +155,12 @@ jobs:
         path: ${{ env.MSYS_ROOT_DIR }}
         key: ${{ runner.os }}-msys2
 
-    # - name: Add MSYS and Strawberry binary to PATH
-    #   run: |
-    #     echo "::add-path::${{ env.MSYS_ROOT_DIR }}"
-    #     echo "::add-path::${{ env.STRAWBERRY_ROOT_DIR }}/bin"
-    #     echo "::add-path::${{ env.STRAWBERRY_ROOT_DIR }}/perl/bin"
-    #     echo "::add-path::${{ env.STRAWBERRY_ROOT_DIR }}/c/bin"
+    - name: Add MSYS and Strawberry binary to PATH
+      run: |
+        echo "::add-path::${{ env.MSYS_ROOT_DIR }}"
+        echo "::add-path::${{ env.STRAWBERRY_ROOT_DIR }}/bin"
+        echo "::add-path::${{ env.STRAWBERRY_ROOT_DIR }}/perl/bin"
+        echo "::add-path::${{ env.STRAWBERRY_ROOT_DIR }}/c/bin"
 
     - name: Build
       shell: msys2 {0}
