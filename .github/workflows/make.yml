@@ -141,8 +141,12 @@ jobs:
         path: ${{ env.MSYS_ROOT_DIR }}
         key: ${{ runner.os }}-msys2
 
+    - name: Add MSYS2 to PATH
+      run: |
+        echo "::add-path::${{ env.MSYS_ROOT_DIR }}"
+
     - name: Build
-      shell: msys2 {0}
+      shell: mingw64 {0}
       run: |
         ls /c
         cd /c/msys64 && ln -sfr . msys64
