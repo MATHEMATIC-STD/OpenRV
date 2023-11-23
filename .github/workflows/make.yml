@@ -183,12 +183,11 @@ jobs:
       run: |
         rvbootstrap Release
         
-    - name: Build
+    - name: Install
       shell: msys2 {0}
       run: |
           rvinst
-    
-      
+
     - name: Upload artifact
       uses: actions/upload-pages-artifact@v1
       with: 
