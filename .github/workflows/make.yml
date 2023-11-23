@@ -163,14 +163,14 @@ jobs:
         echo "::add-path::${{ env.STRAWBERRY_ROOT_DIR }}/c/bin"
 
     - name: prepare Build
-      shell: C:\msys64\mingw64 {0}
+      shell: C:/msys64/mingw64.exe {0}
       run: |
         cd /c/msys64 && ln -sfr . msys64
         cd /c/Qt && ln -sfr . Qt && ln -sfr . Qt5.15.2
         cd /c
 
     - name: Clone
-      shell: C:\msys64\mingw64 {0}
+      shell: C:/msys64/mingw64 {0}
       run: |
         cd /c
         git clone --recursive https://github.com/AcademySoftwareFoundation/OpenRV.git
@@ -179,12 +179,12 @@ jobs:
         rvinst
     
     - name: Build
-      shell: C:\msys64\mingw64 {0}
+      shell: C:/msys64/mingw64.exe {0}
       run: |
         rvbootstrap Release
         
     - name: Install
-      shell: C:\msys64\mingw64 {0}
+      shell: C:/msys64/mingw64.exe {0}
       run: |
           rvinst
 
