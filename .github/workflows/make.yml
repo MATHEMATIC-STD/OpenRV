@@ -162,19 +162,33 @@ jobs:
         echo "::add-path::${{ env.STRAWBERRY_ROOT_DIR }}/perl/bin"
         echo "::add-path::${{ env.STRAWBERRY_ROOT_DIR }}/c/bin"
 
-    - name: Build
+    - name: prepare Build
       shell: msys2 {0}
       run: |
-        ls /c
         cd /c/msys64 && ln -sfr . msys64
         cd /c/Qt && ln -sfr . Qt && ln -sfr . Qt5.15.2
+        cd /c
+
+    - name: Clone
+      shell: msys2 {0}
+      run: |
         cd /c
         git clone --recursive https://github.com/AcademySoftwareFoundation/OpenRV.git
         cd /c/OpenRV
         source ./rvcmds.sh
-        rvbootstrap Release
         rvinst
-
+    
+    - name: Build
+      shell: msys2 {0}
+      run: |
+        rvbootstrap Release
+        
+    - name: Build
+      shell: msys2 {0}
+      run: |
+          rvinst
+    
+      
     - name: Upload artifact
       uses: actions/upload-pages-artifact@v1
       with: 
