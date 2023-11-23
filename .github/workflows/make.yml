@@ -94,7 +94,6 @@ jobs:
       with:
         location: ${{ env.INSTALL_ROOT_DIR }}
         install: mingw-w64-x86_64-toolchain
-        update: true
 
     - shell: msys2 {0}
       if: steps.init_msys_cache.outputs.cache-hit != 'true'
