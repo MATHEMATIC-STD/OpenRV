@@ -136,13 +136,13 @@ jobs:
       run:
         shell: msys2 {0}
 
-    - name: MSYS2 setup
+    steps:
+     - name: MSYS2 setup
       uses: msys2/setup-msys2@v2
       with:
         location: ${{ env.INSTALL_ROOT_DIR }}
         install: mingw-w64-x86_64-toolchain
 
-    steps:
     - name: Init QT cache
       id: init_qt_cache
       uses: actions/cache/@v3
