@@ -132,6 +132,16 @@ jobs:
       - install_strawberry
       # - install_MSYS2
 
+    defaults:
+      run:
+        shell: msys2 {0}
+
+    - name: MSYS2 setup
+      uses: msys2/setup-msys2@v2
+      with:
+        location: ${{ env.INSTALL_ROOT_DIR }}
+        install: mingw-w64-x86_64-toolchain
+
     steps:
     - name: Init QT cache
       id: init_qt_cache
@@ -154,12 +164,6 @@ jobs:
         echo "${{ env.STRAWBERRY_ROOT_DIR }}/bin" >> $GITHUB_PATH
         echo "${{ env.STRAWBERRY_ROOT_DIR }}/perl/bin" >> $GITHUB_PATH
         echo "${{ env.STRAWBERRY_ROOT_DIR }}/c/bin" >> $GITHUB_PATH
-
-    - name: MSYS2 setup
-      uses: msys2/setup-msys2@v2
-      with:
-        location: ${{ env.INSTALL_ROOT_DIR }}
-        install: mingw-w64-x86_64-toolchain
 
     - name: Build
       run: |
