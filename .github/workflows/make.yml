@@ -76,7 +76,14 @@ jobs:
       with:
         perl-version: '5.38.0'
         distribution: strawberry
-
+    
+      - name: Move installation to ${{ env.STRAWBERRY_ROOT_DIR }}
+        if: steps.init_strawberry_cache.outputs.cache-hit != 'true'
+        run: |
+          mv C:/hostedtoolcache/windows/strawberry-perl/5.38.0/x64 ${{ env.STRAWBERRY_ROOT_DIR }}
+          ls C:/
+          ls ${{ env.STRAWBERRY_ROOT_DIR }}
+          
   install_MSYS2:
     runs-on: windows-latest
 
