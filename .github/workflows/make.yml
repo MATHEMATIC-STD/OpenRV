@@ -14,7 +14,6 @@ env:
   INSTALL_ROOT_DIR: '/c'
   MSYS_ROOT_DIR: '/c/msys64'
   QT5_ROOT_DIR: '/c/Qt'
-  QT5_INSTALL_DIR: '/c/Qt/5.15.2/msvc2019_64'
   MSYS: 'winsymlinks:nativestrict'
 
 jobs:
@@ -61,17 +60,22 @@ jobs:
   
   install_perl:
     runs-on: windows-latest
+
     steps:
     - uses: shogo82148/actions-setup-perl@v1
       with:
         perl-version: '5.38.0'
         distribution: strawberry
-        
-  install_MSYS2:
-    needs: install_perl
-    runs-on: windows-latest
-    steps:
 
+    - name: Debug
+      shell: powershell
+      run: |
+        ls C:/
+
+  install_MSYS2:
+    runs-on: windows-latest
+
+    steps:
     - name: Init msys cache
       id: init_msys_cache
       uses: actions/cache/@v3
@@ -109,28 +113,21 @@ jobs:
           
           SETUPTOOLS_USE_DISTUTILS=stdlib pip install py7zr
 
-    - name: debug msys location to cache it
-      shell: powershell
-      run: |
-        ls ${{ env.INSTALL_ROOT_DIR }}
-        ls ${{ env.MSYS_ROOT_DIR }}
-        ls ${{ env.QT5_ROOT_DIR }}
-
-  setup_MSYS2:
-    needs: install_MSYS2
-    runs-on: windows-latest
-    steps:
-    - name: Setup MSYS2 alias
-      shell: msys2 {0}
-      run: |
-        cd /c/msys64 && ln -sfr . msys64
-        cd /c/Qt && ln -sfr . Qt && ln -sfr . Qt5.15.2
-
   build:
     runs-on: windows-latest
-    needs: setup_MSYS2
+    needs: 
+      - install_Qt5
+      - install_perl
+      - install_MSYS2
+
+    # try to restore cache
     steps:
-    - uses: actions/checkout@v4
+    - uses: shogo82148/actions-setup-perl@v1
+      with:
+        perl-version: '5.38.0'
+        distribution: strawberry
+
+    steps:
     - name: Init QT cache
       id: init_qt_cache
       uses: actions/cache/@v3
@@ -148,6 +145,9 @@ jobs:
     - name: Build
       shell: msys2 {0}
       run: |
+        ls /c
+        cd /c/msys64 && ln -sfr . msys64
+        cd /c/Qt && ln -sfr . Qt && ln -sfr . Qt5.15.2
         cd /c
         git clone --recursive https://github.com/AcademySoftwareFoundation/OpenRV.git
         cd /c/OpenRV
