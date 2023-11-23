@@ -127,7 +127,6 @@ jobs:
         perl-version: '5.38.0'
         distribution: strawberry
 
-    steps:
     - name: Init QT cache
       id: init_qt_cache
       uses: actions/cache/@v3
