@@ -166,6 +166,8 @@ jobs:
         echo "${{ env.STRAWBERRY_ROOT_DIR }}/perl/bin" >> $GITHUB_PATH
         echo "${{ env.STRAWBERRY_ROOT_DIR }}/c/bin" >> $GITHUB_PATH
 
+    # c:/users/runneradmin/appdata maybe we can cache this folder to speed up the build
+
     - name: Build
       run: |
         pacman -S --needed --noconfirm \
@@ -194,7 +196,7 @@ jobs:
         git clone --recursive https://github.com/AcademySoftwareFoundation/OpenRV.git
         cd /c/OpenRV
         source ./rvcmds.sh
-        rvbootstrap Release
+        rvsetup && rvmk Release
         rvinst
 
     - name: Upload artifact
