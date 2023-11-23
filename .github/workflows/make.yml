@@ -11,10 +11,10 @@ on:
 env:
   # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
   BUILD_TYPE: Release
-  INSTALL_ROOT_DIR: '/c'
-  MSYS_ROOT_DIR: '/c/msys64'
-  QT5_ROOT_DIR: '/c/Qt'
-  STRAWBERRY_ROOT_DIR: '/c/Strawberry'
+  INSTALL_ROOT_DIR: 'C:/'
+  MSYS_ROOT_DIR: 'C:/msys64'
+  QT5_ROOT_DIR: 'C:/Qt'
+  STRAWBERRY_ROOT_DIR: 'C:/Strawberry'
   MSYS: 'winsymlinks:nativestrict'
   ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
 
@@ -93,6 +93,8 @@ jobs:
       uses: msys2/setup-msys2@v2
       with:
         location: ${{ env.INSTALL_ROOT_DIR }}
+        install: mingw-w64-x86_64-toolchain
+        update: true
 
     - shell: msys2 {0}
       if: steps.init_msys_cache.outputs.cache-hit != 'true'
@@ -124,6 +126,7 @@ jobs:
       - install_Qt5
       - install_strawberry
       - install_MSYS2
+
     steps:
     - name: Init QT cache
       id: init_qt_cache
@@ -167,4 +170,4 @@ jobs:
     - name: Upload artifact
       uses: actions/upload-pages-artifact@v1
       with: 
-        path: '/c/OpenRV/_install'
+        path: 'C:/OpenRV/_install'
