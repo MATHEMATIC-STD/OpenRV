@@ -11,7 +11,10 @@ on:
 env:
   # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
   BUILD_TYPE: Release
-  DRV_DEPS_QT5_LOCATION: '/c'
+  INSTALL_ROOT_DIR: '/c'
+  MSYS_ROOT_DIR: '/c/msys64'
+  QT5_ROOT_DIR: '/c/Qt'
+  QT5_INSTALL_DIR: '/c/Qt/5.15.2/msvc2019_64'
   MSYS: 'winsymlinks:nativestrict'
 
 jobs:
@@ -24,7 +27,7 @@ jobs:
       id: init_qt_cache
       uses: actions/cache/@v3
       with:
-        path: ${{ env.DRV_DEPS_QT5_LOCATION }}
+        path: ${{ env.QT5_ROOT_DIR }}
         key: ${{ runner.os }}-qt-5.15.2
 
     - name: MSVC
@@ -33,7 +36,7 @@ jobs:
     - name: Clean cache QT
       if: steps.init_qt_cache.outputs.cache-hit != 'true'
       run: |
-        rm -r -Force ${{ env.DRV_DEPS_QT5_LOCATION }}/Qt -ErrorAction SilentlyContinue
+        rm -r -Force ${{ env.QT5_ROOT_DIR }} -ErrorAction SilentlyContinue
 
     - name: Install Qt
       if: steps.init_qt_cache.outputs.cache-hit != 'true'
@@ -43,7 +46,7 @@ jobs:
         host: 'windows'
         target: 'desktop'
         arch: 'win64_msvc2019_64'
-        dir: '${{ env.DRV_DEPS_QT5_LOCATION }}'
+        dir: '${{ env.INSTALL_ROOT_DIR }}'
         install-deps: 'true'
         modules: 'qtcharts qtwebengine qtquick3d'
         archives: 'qtbase qtsvg'
@@ -55,19 +58,35 @@ jobs:
         aqtversion: '==3.1.*'
         py7zrversion: '==0.20.*'
         extra: '--external 7z'
-
-  setup_MSYS2:
-    needs: install_Qt5
+  
+  install_perl:
     runs-on: windows-latest
     steps:
     - uses: shogo82148/actions-setup-perl@v1
       with:
         perl-version: '5.34'
+        distribution: strawberry
+        
+  install_MSYS2:
+    needs: install_perl
+    runs-on: windows-latest
+    steps:
+
+    - name: Init msys cache
+      id: init_msys_cache
+      uses: actions/cache/@v3
+      with:
+        path: ${{ env.MSYS_ROOT_DIR }}
+        key: ${{ runner.os }}-msys2
 
     - name: MSYS2
+      if: steps.init_msys_cache.outputs.cache-hit != 'true'
       uses: msys2/setup-msys2@v2
+      with:
+        location: ${{ env.INSTALL_ROOT_DIR }}
 
     - shell: msys2 {0}
+      if: steps.init_msys_cache.outputs.cache-hit != 'true'
       run: |
         pacman -S --needed --noconfirm \
           mingw-w64-x86_64-autotools \
@@ -89,21 +108,44 @@ jobs:
           zip
           
           SETUPTOOLS_USE_DISTUTILS=stdlib pip install py7zr
-          cd /c/msys64 && ln -sfr . msys64
-          cd /c/Qt && ln -sfr . Qt && ln -sfr . Qt5.15.2
+
+    - name: debug msys location to cache it
+      shell: powershell
+      run: |
+        ls ${{ env.INSTALL_ROOT_DIR }}
+        ls ${{ env.MSYS_ROOT_DIR }}
+        ls ${{ env.QT5_ROOT_DIR }}
+
+  setup_MSYS2:
+    needs: install_MSYS2
+    runs-on: windows-latest
+    steps:
+    - name: Setup MSYS2 alias
+      shell: msys2 {0}
+      run: |
+        cd /c/msys64 && ln -sfr . msys64
+        cd /c/Qt && ln -sfr . Qt && ln -sfr . Qt5.15.2
+
   build:
     runs-on: windows-latest
     needs: setup_MSYS2
     steps:
     - uses: actions/checkout@v4
-    - name: Init cache QT
+    - name: Init QT cache
       id: init_qt_cache
       uses: actions/cache/@v3
       with:
-        path: ${{ env.DRV_DEPS_QT5_LOCATION }}
+        path: ${{ env.QT5_ROOT_DIR }}
         key: ${{ runner.os }}-qt-5.15.2
 
-    - name: Configure MSYS2
+    - name: Init MSYS2 cache
+      id: init_msys2_cache
+      uses: actions/cache/@v3
+      with:
+        path: ${{ env.MSYS_ROOT_DIR }}
+        key: ${{ runner.os }}-msys2
+
+    - name: Build
       shell: msys2 {0}
       run: |
         cd /c
