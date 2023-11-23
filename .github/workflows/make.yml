@@ -14,7 +14,9 @@ env:
   INSTALL_ROOT_DIR: '/c'
   MSYS_ROOT_DIR: '/c/msys64'
   QT5_ROOT_DIR: '/c/Qt'
+  STRAWBERRY_ROOT_DIR: '/c/Strawberry'
   MSYS: 'winsymlinks:nativestrict'
+  ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
 
 jobs:
   install_Qt5:
@@ -58,19 +60,23 @@ jobs:
         py7zrversion: '==0.20.*'
         extra: '--external 7z'
   
-  install_perl:
+  install_strawberry:
     runs-on: windows-latest
 
     steps:
+    - name: Init cache Strawberry
+      id: init_strawberry_cache
+      uses: actions/cache/@v3
+      with:
+        path: ${{ env.STRAWBERRY_ROOT_DIR }}
+        key: ${{ runner.os }}-strawberry
+
+    steps:
     - uses: shogo82148/actions-setup-perl@v1
+      if: steps.init_strawberry_cache.outputs.cache-hit != 'true'
       with:
         perl-version: '5.38.0'
         distribution: strawberry
-
-    - name: Debug
-      shell: powershell
-      run: |
-        ls C:/
 
   install_MSYS2:
     runs-on: windows-latest
@@ -117,15 +123,8 @@ jobs:
     runs-on: windows-latest
     needs: 
       - install_Qt5
-      - install_perl
+      - install_strawberry
       - install_MSYS2
-
-    # try to restore cache
-    steps:
-    - uses: shogo82148/actions-setup-perl@v1
-      with:
-        perl-version: '5.38.0'
-        distribution: strawberry
 
     - name: Init QT cache
       id: init_qt_cache
@@ -134,6 +133,13 @@ jobs:
         path: ${{ env.QT5_ROOT_DIR }}
         key: ${{ runner.os }}-qt-5.15.2
 
+    - name: Init cache Strawberry
+      id: init_strawberry_cache
+      uses: actions/cache/@v3
+      with:
+        path: ${{ env.STRAWBERRY_ROOT_DIR }}
+        key: ${{ runner.os }}-strawberry
+
     - name: Init MSYS2 cache
       id: init_msys2_cache
       uses: actions/cache/@v3
@@ -141,9 +147,10 @@ jobs:
         path: ${{ env.MSYS_ROOT_DIR }}
         key: ${{ runner.os }}-msys2
 
-    - name: Add MSYS2 to PATH
+    - name: Add MSYS and Strawberry binary to PATH
       run: |
         echo "::add-path::${{ env.MSYS_ROOT_DIR }}"
+        echo "::add-path::${{ env.STRAWBERRY_ROOT_DIR }}"
 
     - name: Build
       shell: mingw64 {0}
