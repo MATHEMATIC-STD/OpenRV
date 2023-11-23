@@ -131,7 +131,7 @@ jobs:
     needs: 
       - install_Qt5
       - install_strawberry
-      - install_MSYS2
+      # - install_MSYS2
 
     steps:
     - name: Init QT cache
