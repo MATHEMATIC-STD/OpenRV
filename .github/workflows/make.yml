@@ -195,8 +195,9 @@ jobs:
         cd /c
         git clone --recursive https://github.com/AcademySoftwareFoundation/OpenRV.git
         cd /c/OpenRV
+        shopt -s expand_aliases
         source ./rvcmds.sh
-        rvsetup && rvmk Release
+        rvbootstrap Release
         rvinst
 
     - name: Upload artifact
