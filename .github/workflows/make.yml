@@ -158,10 +158,12 @@ jobs:
     - name: Add MSYS and Strawberry binary to PATH
       run: |
         echo "::add-path::${{ env.MSYS_ROOT_DIR }}"
-        echo "::add-path::${{ env.STRAWBERRY_ROOT_DIR }}"
+        echo "::add-path::${{ env.STRAWBERRY_ROOT_DIR }}/bin"
+        echo "::add-path::${{ env.STRAWBERRY_ROOT_DIR }}/perl/bin"
+        echo "::add-path::${{ env.STRAWBERRY_ROOT_DIR }}/c/bin"
 
     - name: Build
-      shell: mingw64 {0}
+      shell: mingw64
       run: |
         ls /c
         cd /c/msys64 && ln -sfr . msys64
