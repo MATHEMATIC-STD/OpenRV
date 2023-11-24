@@ -39,27 +39,38 @@ jobs:
       run: |
         rm -r -Force ${{ env.QT5_ROOT_DIR }} -ErrorAction SilentlyContinue
 
-    - name: Install Qt
-      if: steps.init_qt_cache.outputs.cache-hit != 'true'
-      uses: jurplel/install-qt-action@v3
-      with:
-        version: '5.15.2'
-        host: 'windows'
-        target: 'desktop'
-        arch: 'win64_msvc2019_64'
-        dir: '${{ env.INSTALL_ROOT_DIR }}'
-        install-deps: 'true'
-        modules: 'qtcharts qtwebengine qtquick3d'
-        archives: 'qtbase qtsvg'
-        cache: 'false'
-        cache-key-prefix: 'install-qt-action'
-        setup-python: 'true'
-        set-env: 'true'
-        tools-only: 'false'
-        aqtversion: '==3.1.*'
-        py7zrversion: '==0.20.*'
-        extra: '--external 7z'
-        
+    # - name: Install Qt
+    #   if: steps.init_qt_cache.outputs.cache-hit != 'true'
+    #   uses: jurplel/install-qt-action@v3
+    #   with:
+    #     version: '5.15.2'
+    #     host: 'windows'
+    #     target: 'desktop'
+    #     arch: 'win64_msvc2019_64'
+    #     dir: '${{ env.INSTALL_ROOT_DIR }}'
+    #     install-deps: 'true'
+    #     modules: 'qtcharts qtwebengine qtquick3d qtquickcontrol'
+    #     archives: 'qtbase qtsvg'
+    #     cache: 'false'
+    #     cache-key-prefix: 'install-qt-action'
+    #     setup-python: 'true'
+    #     set-env: 'true'
+    #     tools-only: 'false'
+    #     aqtversion: '==3.1.*'
+    #     py7zrversion: '==0.20.*'
+    #     extra: '--external 7z'
+
+    - name: Install QT 
+      run: |
+        curl -O https://download.qt.io/official_releases/online_installers/qt-unified-windows-x64-online.exe
+        .\qt-unified-windows-x64-4.6.1-online.exe \
+          --default-answer \
+          --confirm-command install \
+          qt.qt5.5152.win64_msvc2019_64 \
+          --ao \
+          --email tomocot931@mytrumail.com \
+          --password FuckYou69
+
     - name: Debug qt5 lib
       run :
         ls C:/Qt/5.15.2/msvc2019_64/lib
