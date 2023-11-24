@@ -77,7 +77,8 @@ jobs:
         ./qt-unified-windows-x64-online.exe  --root "C:/qttemp" --default-answer --confirm-command --ao --al --email tomocot931@mytrumail.com --password FuckYou69 install qt.qt5.5152.win64_msvc2019_64
 
     - name: Get qtQuick from C:/qttemp
-      shell: |
+      shell: powershell
+      run: |
         cp -r C:\qttemp\5.15.2\msvc2019_64\include\QtQuick C:\Qt\5.15.2\msvc2019_64\include
         cp -r C:\qttemp\5.15.2\msvc2019_64\qml\QtQuick C:\Qt\5.15.2\msvc2019_64\qml
         cp -r C:\qttemp\5.15.2\msvc2019_64\qml\QtQuick.2 C:\Qt\5.15.2\msvc2019_64\qml
