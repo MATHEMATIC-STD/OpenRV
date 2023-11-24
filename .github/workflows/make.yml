@@ -71,15 +71,15 @@ jobs:
       if: steps.init_qt_cache.outputs.cache-hit != 'true'
       shell: powershell
       run: |
-        @("QtQuick", "QtQmlModels") | ForEach-Object {
+        @("QtQuick", "QtQmlModels", "QtQml") | ForEach-Object {
           cp -r C:\qttemp\5.15.2\msvc2019_64\include\$_\ C:\Qt\5.15.2\msvc2019_64\include\$_ -ErrorAction SilentlyContinue
         }
 
-        @("QtQuick", "QtQuick.2") | ForEach-Object {
+        @("QtQuick", "QtQuick.2", "QtQml") | ForEach-Object {
           cp -r C:\qttemp\5.15.2\msvc2019_64\qml\$_\ C:\Qt\5.15.2\msvc2019_64\qml\$_ -ErrorAction SilentlyContinue
         }
 
-        @("Qt5Quick", "Qt5QmlModels") | ForEach-Object {
+        @("Qt5Quick", "Qt5QmlModels", "Qt5Qml") | ForEach-Object {
           cp -r C:\qttemp\5.15.2\msvc2019_64\lib\cmake\$_ C:\Qt\5.15.2\msvc2019_64\lib\cmake\$_ -ErrorAction SilentlyContinue
           cp C:\qttemp\5.15.2\msvc2019_64\lib\$_.lib C:\Qt\5.15.2\msvc2019_64\lib -ErrorAction SilentlyContinue
           cp C:\qttemp\5.15.2\msvc2019_64\lib\$_.prl C:\Qt\5.15.2\msvc2019_64\lib -ErrorAction SilentlyContinue
