@@ -39,54 +39,47 @@ jobs:
       run: |
         rm -r -Force ${{ env.QT5_ROOT_DIR }} -ErrorAction SilentlyContinue
 
-    # - name: Install Qt
-    #   if: steps.init_qt_cache.outputs.cache-hit != 'true'
-    #   uses: jurplel/install-qt-action@v3
-    #   with:
-    #     version: '5.15.2'
-    #     host: 'windows'
-    #     target: 'desktop'
-    #     arch: 'win64_msvc2019_64'
-    #     dir: '${{ env.INSTALL_ROOT_DIR }}'
-    #     install-deps: 'true'
-    #     modules: 'qtcharts qtwebengine qtquick3d qtquickcontrol'
-    #     archives: 'qtbase qtsvg'
-    #     cache: 'false'
-    #     cache-key-prefix: 'install-qt-action'
-    #     setup-python: 'true'
-    #     set-env: 'true'
-    #     tools-only: 'false'
-    #     aqtversion: '==3.1.*'
-    #     py7zrversion: '==0.20.*'
-    #     extra: '--external 7z'
-    
     - name: Install Qt
+      if: steps.init_qt_cache.outputs.cache-hit != 'true'
       uses: jurplel/install-qt-action@v3
       with:
-        aqtversion: '==3.1.*'
         version: '5.15.2'
         host: 'windows'
         target: 'desktop'
         arch: 'win64_msvc2019_64'
-        modules: 'debug_info qtcharts qtdatavis3d qtlottie qtnetworkauth qtpurchasing qtquick3d qtquicktimeline qtscript qtvirtualkeyboard qtwebengine qtwebglplugin'
+        dir: '${{ env.INSTALL_ROOT_DIR }}'
+        install-deps: 'true'
+        modules: 'debug_info qtcharts qtdatavis3d qtlottie qtnetworkauth qtpurchasing qtquick3d qtquicktimeline qtscript qtvirtualkeyboard qtwebengine qtwebglplugin qtquickcontrol'
+        archives: 'qtbase qtsvg'
+        cache: 'false'
+        cache-key-prefix: 'install-qt-action'
+        setup-python: 'true'
+        set-env: 'true'
+        tools-only: 'false'
+        aqtversion: '==3.1.*'
+        py7zrversion: '==0.20.*'
+        extra: '--external 7z'
 
     - name: Install QT
+      if: steps.init_qt_cache.outputs.cache-hit != 'true'
       shell: powershell 
       run: |
         curl -URI https://download.qt.io/official_releases/online_installers/qt-unified-windows-x64-online.exe -OutFile ./qt-unified-windows-x64-online.exe
         ./qt-unified-windows-x64-online.exe  --root "C:/qttemp" --default-answer --confirm-command --ao --al --email tomocot931@mytrumail.com --password FuckYou69 install qt.qt5.5152.win64_msvc2019_64
 
     - name: Get qtQuick from C:/qttemp
+      if: steps.init_qt_cache.outputs.cache-hit != 'true'
       shell: powershell
       run: |
-        cp -r C:\qttemp\5.15.2\msvc2019_64\include\QtQuick C:\Qt\5.15.2\msvc2019_64\include -ErrorAction SilentlyContinue
-        cp -r C:\qttemp\5.15.2\msvc2019_64\qml\QtQuick C:\Qt\5.15.2\msvc2019_64\qml -ErrorAction SilentlyContinue
-        cp -r C:\qttemp\5.15.2\msvc2019_64\qml\QtQuick.2 C:\Qt\5.15.2\msvc2019_64\qml -ErrorAction SilentlyContinue
+        cp -r C:\qttemp\5.15.2\msvc2019_64\include\QtQuick\ C:\Qt\5.15.2\msvc2019_64\include\QtQuick -ErrorAction SilentlyContinue
+        cp -r C:\qttemp\5.15.2\msvc2019_64\qml\QtQuick\ C:\Qt\5.15.2\msvc2019_64\qml\QtQuick -ErrorAction SilentlyContinue
+        cp -r C:\qttemp\5.15.2\msvc2019_64\qml\QtQuick.2\ C:\Qt\5.15.2\msvc2019_64\qml\QtQuick.2 -ErrorAction SilentlyContinue
         cp C:\qttemp\5.15.2\msvc2019_64\qml\Qt5Quick.lib C:\Qt\5.15.2\msvc2019_64\lib -ErrorAction SilentlyContinue
         cp C:\qttemp\5.15.2\msvc2019_64\qml\Qt5Quick.prl C:\Qt\5.15.2\msvc2019_64\lib -ErrorAction SilentlyContinue
     
     - name: Debug qt5 lib
       run : |
+        ls C:/Qt/5.15.2/msvc2019_64 -ErrorAction SilentlyContinue
         ls C:/Qt/5.15.2/msvc2019_64/include -ErrorAction SilentlyContinue
         ls C:/Qt/5.15.2/msvc2019_64/lib -ErrorAction SilentlyContinue
         ls C:/Qt/5.15.2/msvc2019_64/qml -ErrorAction SilentlyContinue
