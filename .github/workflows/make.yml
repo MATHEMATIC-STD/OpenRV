@@ -74,7 +74,7 @@ jobs:
         cp -r C:\qttemp\5.15.2\msvc2019_64\include\QtQuick\ C:\Qt\5.15.2\msvc2019_64\include\QtQuick -ErrorAction SilentlyContinue
         cp -r C:\qttemp\5.15.2\msvc2019_64\qml\QtQuick\ C:\Qt\5.15.2\msvc2019_64\qml\QtQuick -ErrorAction SilentlyContinue
         cp -r C:\qttemp\5.15.2\msvc2019_64\qml\QtQuick.2\ C:\Qt\5.15.2\msvc2019_64\qml\QtQuick.2 -ErrorAction SilentlyContinue
-        cp -r C:\qttemp\5.15.2\msvc2019_64\lib\cmake\QtQuick C:\Qt\5.15.2\msvc2019_64\lib\cmake\QtQuick -ErrorAction SilentlyContinue
+        cp -r C:\qttemp\5.15.2\msvc2019_64\lib\cmake\Qt5Quick C:\Qt\5.15.2\msvc2019_64\lib\cmake\Qt5Quick -ErrorAction SilentlyContinue
         cp C:\qttemp\5.15.2\msvc2019_64\lib\Qt5Quick.lib C:\Qt\5.15.2\msvc2019_64\lib -ErrorAction SilentlyContinue
         cp C:\qttemp\5.15.2\msvc2019_64\lib\Qt5Quick.prl C:\Qt\5.15.2\msvc2019_64\lib -ErrorAction SilentlyContinue
     
