@@ -87,9 +87,9 @@ jobs:
     
     - name: Debug qt5 lib
       run : |
-        ls C:/Qt/5.15.2/msvc2019_64/include
-        ls C:/Qt/5.15.2/msvc2019_64/lib
-        ls C:/Qt/5.15.2/msvc2019_64/qml
+        ls C:/Qt/5.15.2/msvc2019_64/include -ErrorAction SilentlyContinue
+        ls C:/Qt/5.15.2/msvc2019_64/lib -ErrorAction SilentlyContinue
+        ls C:/Qt/5.15.2/msvc2019_64/qml -ErrorAction SilentlyContinue
         
   install_strawberry:
     runs-on: windows-latest
