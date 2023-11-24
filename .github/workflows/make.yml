@@ -62,7 +62,7 @@ jobs:
         
     - name: Debug qt5 lib
       run :
-        ls C:/Qt/Qt/5.15.2/msvc2019_64/lib
+        ls C:/Qt/5.15.2/msvc2019_64/lib
         
   install_strawberry:
     runs-on: windows-latest
