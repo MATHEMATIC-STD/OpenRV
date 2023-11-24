@@ -67,17 +67,24 @@ jobs:
         curl -URI https://download.qt.io/official_releases/online_installers/qt-unified-windows-x64-online.exe -OutFile ./qt-unified-windows-x64-online.exe
         ./qt-unified-windows-x64-online.exe  --root "C:/qttemp" --default-answer --confirm-command --ao --al --email tomocot931@mytrumail.com --password FuckYou69 install qt.qt5.5152.win64_msvc2019_64
 
-    - name: Merge qttemp in qt
+    - name: Fix missing library from jurplel/install-qt-action
       if: steps.init_qt_cache.outputs.cache-hit != 'true'
       shell: powershell
       run: |
-        cp -r C:\qttemp\5.15.2\msvc2019_64\include\QtQuick\ C:\Qt\5.15.2\msvc2019_64\include\QtQuick -ErrorAction SilentlyContinue
-        cp -r C:\qttemp\5.15.2\msvc2019_64\qml\QtQuick\ C:\Qt\5.15.2\msvc2019_64\qml\QtQuick -ErrorAction SilentlyContinue
-        cp -r C:\qttemp\5.15.2\msvc2019_64\qml\QtQuick.2\ C:\Qt\5.15.2\msvc2019_64\qml\QtQuick.2 -ErrorAction SilentlyContinue
-        cp -r C:\qttemp\5.15.2\msvc2019_64\lib\cmake\Qt5Quick C:\Qt\5.15.2\msvc2019_64\lib\cmake\Qt5Quick -ErrorAction SilentlyContinue
-        cp C:\qttemp\5.15.2\msvc2019_64\lib\Qt5Quick.lib C:\Qt\5.15.2\msvc2019_64\lib -ErrorAction SilentlyContinue
-        cp C:\qttemp\5.15.2\msvc2019_64\lib\Qt5Quick.prl C:\Qt\5.15.2\msvc2019_64\lib -ErrorAction SilentlyContinue
-    
+        @("QtQuick", "QtQmlModels") | ForEach-Object {
+          cp -r C:\qttemp\5.15.2\msvc2019_64\include\$_\ C:\Qt\5.15.2\msvc2019_64\include\$_ -ErrorAction SilentlyContinue
+        }
+
+        @("QtQuick", "QtQuick.2") | ForEach-Object {
+          cp -r C:\qttemp\5.15.2\msvc2019_64\qml\$_\ C:\Qt\5.15.2\msvc2019_64\qml\$_ -ErrorAction SilentlyContinue
+        }
+
+        @("Qt5Quick", "Qt5QmlModels") | ForEach-Object {
+          cp -r C:\qttemp\5.15.2\msvc2019_64\lib\cmake\$_ C:\Qt\5.15.2\msvc2019_64\lib\cmake\$_ -ErrorAction SilentlyContinue
+          cp C:\qttemp\5.15.2\msvc2019_64\lib\$_.lib C:\Qt\5.15.2\msvc2019_64\lib -ErrorAction SilentlyContinue
+          cp C:\qttemp\5.15.2\msvc2019_64\lib\$_.prl C:\Qt\5.15.2\msvc2019_64\lib -ErrorAction SilentlyContinue
+        }
+
     - name: Debug qt5 lib
       run : |
         ls C:/Qt/5.15.2/msvc2019_64 -ErrorAction SilentlyContinue
