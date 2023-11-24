@@ -49,7 +49,7 @@ jobs:
         arch: 'win64_msvc2019_64'
         dir: '${{ env.INSTALL_ROOT_DIR }}'
         install-deps: 'true'
-        modules: 'debug_info qtcharts qtdatavis3d qtlottie qtnetworkauth qtpurchasing qtquick3d qtquicktimeline qtscript qtvirtualkeyboard qtwebengine qtwebglplugin qtquickcontrol'
+        modules: 'debug_info qtcharts qtdatavis3d qtlottie qtnetworkauth qtpurchasing qtquick3d qtquicktimeline qtscript qtvirtualkeyboard qtwebengine qtwebglplugin qtquickcontrols'
         archives: 'qtbase qtsvg'
         cache: 'false'
         cache-key-prefix: 'install-qt-action'
