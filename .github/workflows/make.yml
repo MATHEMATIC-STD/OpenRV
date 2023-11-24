@@ -59,13 +59,31 @@ jobs:
     #     aqtversion: '==3.1.*'
     #     py7zrversion: '==0.20.*'
     #     extra: '--external 7z'
+    
+    - name: Install Qt
+      uses: jurplel/install-qt-action@v3
+      with:
+        aqtversion: '==3.1.*'
+        version: '5.15.2'
+        host: 'windows'
+        target: 'desktop'
+        arch: 'win64_msvc2019_64'
+        modules: 'debug_info qtcharts qtdatavis3d qtlottie qtnetworkauth qtpurchasing qtquick3d qtquicktimeline qtscript qtvirtualkeyboard qtwebengine qtwebglplugin'
 
     - name: Install QT
       shell: powershell 
       run: |
         curl -URI https://download.qt.io/official_releases/online_installers/qt-unified-windows-x64-online.exe -OutFile ./qt-unified-windows-x64-online.exe
-        ./qt-unified-windows-x64-online.exe --default-answer --confirm-command --ao --al --email tomocot931@mytrumail.com --password FuckYou69 install qt.qt5.5152.win64_msvc2019_64 qt.qt5.5152.qtcharts.win64_msvc2019_64 qt.qt5.5152.qtdatavis3d.win64_msvc2019_64 qt.qt5.5152.qtlottie.win64_msvc2019_64 qt.qt5.5152.qtnetworkauth.win64_msvc2019_64 qt.qt5.5152.qtpurchasing.win64_msvc2019_64 qt.qt5.5152.qtquick3d.win64_msvc2019_64 qt.qt5.5152.qtquicktimeline.win64_msvc2019_64 qt.qt5.5152.qtscript.win64_msvc2019_64 qt.qt5.5152.qtvirtualkeyboard.win64_msvc2019_64 qt.qt5.5152.qtwebengine.win64_msvc2019_64 qt.qt5.5152.qtwebglplugin.win64_msvc2019_64
+        ./qt-unified-windows-x64-online.exe  --root "C:/qttemp" --default-answer --confirm-command --ao --al --email tomocot931@mytrumail.com --password FuckYou69 install qt.qt5.5152.win64_msvc2019_64
 
+    - name: Get qtQuick from C:/qttemp
+      shell: |
+        cp -r C:\qttemp\5.15.2\msvc2019_64\include\QtQuick C:\Qt\5.15.2\msvc2019_64\include
+        cp -r C:\qttemp\5.15.2\msvc2019_64\qml\QtQuick C:\Qt\5.15.2\msvc2019_64\qml
+        cp -r C:\qttemp\5.15.2\msvc2019_64\qml\QtQuick.2 C:\Qt\5.15.2\msvc2019_64\qml
+        cp C:\qttemp\5.15.2\msvc2019_64\qml\Qt5Quick.lib C:\Qt\5.15.2\msvc2019_64\lib
+        cp C:\qttemp\5.15.2\msvc2019_64\qml\Qt5Quick.prl C:\Qt\5.15.2\msvc2019_64\lib
+    
     - name: Debug qt5 lib
       run :
         ls C:/Qt/5.15.2/msvc2019_64/lib
