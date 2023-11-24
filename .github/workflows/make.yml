@@ -63,13 +63,7 @@ jobs:
     - name: Install QT 
       run: |
         curl -O https://download.qt.io/official_releases/online_installers/qt-unified-windows-x64-online.exe
-        .\qt-unified-windows-x64-4.6.1-online.exe \
-          --default-answer \
-          --confirm-command install \
-          qt.qt5.5152.win64_msvc2019_64 \
-          --ao \
-          --email tomocot931@mytrumail.com \
-          --password FuckYou69
+        .\qt-unified-windows-x64-4.6.1-online.exe --default-answer --confirm-command install qt.qt5.5152.win64_msvc2019_64 --ao --email tomocot931@mytrumail.com --password FuckYou69
 
     - name: Debug qt5 lib
       run :
