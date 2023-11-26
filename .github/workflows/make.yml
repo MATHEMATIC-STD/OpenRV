@@ -83,6 +83,7 @@ jobs:
           cp C:\qttemp\5.15.2\msvc2019_64\lib\$_.lib C:\Qt\5.15.2\msvc2019_64\lib -ErrorAction SilentlyContinue
           cp C:\qttemp\5.15.2\msvc2019_64\lib\$_.prl C:\Qt\5.15.2\msvc2019_64\lib -ErrorAction SilentlyContinue
           cp C:\qttemp\5.15.2\msvc2019_64\bin\$_.dll C:\Qt\5.15.2\msvc2019_64\bin -ErrorAction SilentlyContinue
+          cp C:\qttemp\5.15.2\msvc2019_64\bin\$_d.dll C:\Qt\5.15.2\msvc2019_64\bin -ErrorAction SilentlyContinue
         }
 
     - name: Debug qt5 lib
