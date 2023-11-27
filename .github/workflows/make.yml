@@ -95,6 +95,10 @@ jobs:
           cp C:\qttemp\5.15.2\msvc2019_64\bin\$_"d.dll" C:\Qt\5.15.2\msvc2019_64\bin -ErrorAction SilentlyContinue
         }
 
+        @("qmltooling") | ForEach-Object {
+          cp -r C:\qttemp\5.15.2\msvc2019_64\plugins\$_ C:\Qt\5.15.2\msvc2019_64\plugins\$_ -ErrorAction SilentlyContinue
+        }
+
     - name: Debug qt5 lib
       run : |
         ls C:/Qt/5.15.2/msvc2019_64 -ErrorAction SilentlyContinue
@@ -103,7 +107,8 @@ jobs:
         ls C:/Qt/5.15.2/msvc2019_64/lib/cmake -ErrorAction SilentlyContinue
         ls C:/Qt/5.15.2/msvc2019_64/qml -ErrorAction SilentlyContinue
         ls C:/Qt/5.15.2/msvc2019_64/bin -ErrorAction SilentlyContinue
-        ls C:/qttemp/5.15.2/msvc2019_64/bin -ErrorAction SilentlyContinue
+        ls C:/Qt/5.15.2/msvc2019_64/plugins -ErrorAction SilentlyContinue
+        ls C:/qttemp/5.15.2/msvc2019_64/plugins -ErrorAction SilentlyContinue
         
   install_strawberry:
     runs-on: windows-latest
