@@ -95,7 +95,7 @@ jobs:
           cp C:\qttemp\5.15.2\msvc2019_64\bin\$_"d.dll" C:\Qt\5.15.2\msvc2019_64\bin -ErrorAction SilentlyContinue
         }
 
-        @("audio", "qmltooling", "scenegraph", "platforminputcontexts", "position") | ForEach-Object {
+        @("audio", "qmltooling", "scenegraph", "platforminputcontexts", "position", "virtualkeyboard") | ForEach-Object {
           cp -r C:\qttemp\5.15.2\msvc2019_64\plugins\$_ C:\Qt\5.15.2\msvc2019_64\plugins\$_ -ErrorAction SilentlyContinue
         }
 
@@ -219,6 +219,7 @@ jobs:
     # c:/users/runneradmin/appdata maybe we can cache this folder to speed up the build
 
     - name: Build
+      shell: msys2 {0}
       run: |
         pacman -S --needed --noconfirm \
           mingw-w64-x86_64-autotools \
