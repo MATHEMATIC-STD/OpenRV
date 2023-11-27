@@ -14,6 +14,7 @@ env:
   INSTALL_ROOT_DIR: 'C:/'
   MSYS_ROOT_DIR: 'C:/msys64'
   QT5_ROOT_DIR: 'C:/Qt'
+  QT5_TEMP_ROOT_DIR: 'C:/qttemp'
   STRAWBERRY_ROOT_DIR: 'C:/Strawberry'
   MSYS: 'winsymlinks:nativestrict'
 
@@ -29,6 +30,13 @@ jobs:
       with:
         path: ${{ env.QT5_ROOT_DIR }}
         key: ${{ runner.os }}-qt-5.15.2
+        
+    - name: Init cache QTtemp
+      id: init_qttemp_cache
+      uses: actions/cache/@v3
+      with:
+        path: ${{ env.QT5_TEMP_ROOT_DIR }}
+        key: ${{ runner.os }}-qttemp-5.15.2
 
     - name: MSVC
       uses: ilammy/msvc-dev-cmd@v1.4.1
@@ -59,15 +67,14 @@ jobs:
         py7zrversion: '==0.20.*'
         extra: '--external 7z'
 
-    - name: Install QT
-      if: steps.init_qt_cache.outputs.cache-hit != 'true'
+    - name: Install QT temp
+      if: steps.init_qttemp_cache.outputs.cache-hit != 'true'
       shell: powershell 
       run: |
         curl -URI https://download.qt.io/official_releases/online_installers/qt-unified-windows-x64-online.exe -OutFile ./qt-unified-windows-x64-online.exe
         ./qt-unified-windows-x64-online.exe  --root "C:/qttemp" --default-answer --confirm-command --ao --al --email tomocot931@mytrumail.com --password FuckYou69 install qt.qt5.5152.win64_msvc2019_64
 
     - name: Fix missing library from jurplel/install-qt-action
-      if: steps.init_qt_cache.outputs.cache-hit != 'true'
       shell: powershell
       run: |
         @("QtQuick", "QtQuickWidgets", "QtQmlModels", "QtQml", "QtUiTools", "QtWebChannel", "QtMultimedia", "QtPositioning") | ForEach-Object {
