@@ -95,7 +95,7 @@ jobs:
           cp C:\qttemp\5.15.2\msvc2019_64\bin\$_"d.dll" C:\Qt\5.15.2\msvc2019_64\bin -ErrorAction SilentlyContinue
         }
 
-        @("qmltooling","scenegraph") | ForEach-Object {
+        @("audio", "qmltooling", "scenegraph", "platforminputcontexts", "position") | ForEach-Object {
           cp -r C:\qttemp\5.15.2\msvc2019_64\plugins\$_ C:\Qt\5.15.2\msvc2019_64\plugins\$_ -ErrorAction SilentlyContinue
         }
 
