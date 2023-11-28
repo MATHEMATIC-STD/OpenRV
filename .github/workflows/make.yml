@@ -22,7 +22,7 @@ jobs:
   install_Qt5:
     # The CMake configure and build commands are platform agnostic and should work equally well on Windows or Mac.
     # You can convert this to a matrix build if you need cross-platform coverage.
-    runs-on: windows-latest
+    runs-on: [self-hosted]
     steps:
     - name: Init cache QT
       id: init_qt_cache
@@ -54,7 +54,7 @@ jobs:
         host: 'windows'
         target: 'desktop'
         arch: 'win64_msvc2019_64'
-        dir: '${{ env.INSTALL_ROOT_DIR }}'
+        dir: '${{ env.QT5_TEMP_ROOT_DIR }}'
         install-deps: 'true'
         modules: 'debug_info qtcharts qtdatavis3d qtlottie qtnetworkauth qtpurchasing qtquick3d qtquicktimeline qtscript qtvirtualkeyboard qtwebengine qtwebglplugin'
         archives: 'qtbase qtsvg'
@@ -72,20 +72,20 @@ jobs:
       shell: powershell 
       run: |
         curl -URI https://download.qt.io/official_releases/online_installers/qt-unified-windows-x64-online.exe -OutFile ./qt-unified-windows-x64-online.exe
-        ./qt-unified-windows-x64-online.exe  --root "C:/qttemp" --default-answer --confirm-command --ao --al --email tomocot931@mytrumail.com --password FuckYou69 install qt.qt5.5152.win64_msvc2019_64
+        ./qt-unified-windows-x64-online.exe  --root "${{ env.QT5_ROOT_DIR }}" --default-answer --confirm-command --ao --al --email tomocot931@mytrumail.com --password FuckYou69 install qt.qt5.5152.win64_msvc2019_64
 
     - name: Fix missing library from jurplel/install-qt-action
       shell: powershell
       run: |
-        @("QtQuick", "QtQuickWidgets", "QtQmlModels", "QtQml", "QtUiTools", "QtWebChannel", "QtMultimedia", "QtPositioning") | ForEach-Object {
+        @("QtBodymovin", "QtCharts", "QtDataVisualization", "QtNetworkAuth", "QtQuick3D", "QtQuick3DAssetImport", "QtQuick3DRender", "QtQuick3DRuntimeRender", "QtQuick3DUtils", "QtScript", "QtScriptTools", "QtVirtualKeyboard", "QtWebEngine", "QtWebEngineWidgets", "QtWebEngineCore", "QtVirtualKeyboard") | ForEach-Object {
           cp -r C:\qttemp\5.15.2\msvc2019_64\include\$_\ C:\Qt\5.15.2\msvc2019_64\include\$_ -ErrorAction SilentlyContinue
         }
 
-        @("QtQuick", "QtQuick.2", "QtQml", "QtWebChannel", "QtMultimedia", "QtPositioning") | ForEach-Object {
+        @("QtCharts", "QtDataVisualization", "QtPurchasing", "QtQuick3D", "QtWebEngine") | ForEach-Object {
           cp -r C:\qttemp\5.15.2\msvc2019_64\qml\$_\ C:\Qt\5.15.2\msvc2019_64\qml\$_ -ErrorAction SilentlyContinue
         }
 
-        @("Qt5Quick", "Qt5QuickWidgets", "Qt5QmlModels", "Qt5Qml", "Qt5UiTools", "Qt5WebChannel", "Qt5Multimedia", "Qt5Positioning") | ForEach-Object {
+        @("Qt5BodyMovin", "Qt5Charts", "Qt5NetworkAuth", "Qt5Quick3D", "Qt5Quick3DAssetImport", "Qt5Quick3DRender", "Qt5Quick3DRuntimeRender", "Qt5Quick3DUtils", "Qt5Script", "Qt5ScriptTools", "Qt5VirtualKeyboard", "Qt5WebEngine", "Qt5WebEngineCore", "Qt5WebEngineWidgets", "Qt5VirtualKeyboard") | ForEach-Object {
           cp -r C:\qttemp\5.15.2\msvc2019_64\lib\cmake\$_ C:\Qt\5.15.2\msvc2019_64\lib\cmake\$_ -ErrorAction SilentlyContinue
           cp C:\qttemp\5.15.2\msvc2019_64\lib\$_.lib C:\Qt\5.15.2\msvc2019_64\lib -ErrorAction SilentlyContinue
           cp C:\qttemp\5.15.2\msvc2019_64\lib\$_"d.lib" C:\Qt\5.15.2\msvc2019_64\lib -ErrorAction SilentlyContinue
@@ -95,7 +95,7 @@ jobs:
           cp C:\qttemp\5.15.2\msvc2019_64\bin\$_"d.dll" C:\Qt\5.15.2\msvc2019_64\bin -ErrorAction SilentlyContinue
         }
 
-        @("audio", "qmltooling", "scenegraph", "platforminputcontexts", "position", "virtualkeyboard") | ForEach-Object {
+        @("assetimporters", "platforminputcontexts", "virtualkeyboard") | ForEach-Object {
           cp -r C:\qttemp\5.15.2\msvc2019_64\plugins\$_ C:\Qt\5.15.2\msvc2019_64\plugins\$_ -ErrorAction SilentlyContinue
         }
 
@@ -111,7 +111,7 @@ jobs:
         ls C:/qttemp/5.15.2/msvc2019_64/plugins -ErrorAction SilentlyContinue
         
   install_strawberry:
-    runs-on: windows-latest
+    runs-on: [self-hosted]
 
     steps:
     - name: Init cache Strawberry
@@ -176,7 +176,7 @@ jobs:
   #         SETUPTOOLS_USE_DISTUTILS=stdlib pip install py7zr
 
   build:
-    runs-on: windows-latest
+    runs-on: [self-hosted]
     needs: 
       - install_Qt5
       - install_strawberry
@@ -210,47 +210,51 @@ jobs:
 
     #    echo "::add-path::${{ env.MSYS_ROOT_DIR }}"
             
-    - name: Add MSYS and Strawberry binary to PATH
-      run: |
-        echo "${{ env.STRAWBERRY_ROOT_DIR }}/bin" >> $GITHUB_PATH
-        echo "${{ env.STRAWBERRY_ROOT_DIR }}/perl/bin" >> $GITHUB_PATH
-        echo "${{ env.STRAWBERRY_ROOT_DIR }}/c/bin" >> $GITHUB_PATH
+    # - name: Add MSYS and Strawberry binary to PATH
+    #   run: |
+    #     echo "${{ env.STRAWBERRY_ROOT_DIR }}/bin" >> $GITHUB_PATH
+    #     echo "${{ env.STRAWBERRY_ROOT_DIR }}/perl/bin" >> $GITHUB_PATH
+    #     echo "${{ env.STRAWBERRY_ROOT_DIR }}/c/bin" >> $GITHUB_PATH
 
     # c:/users/runneradmin/appdata maybe we can cache this folder to speed up the build
 
     - name: Build
       shell: msys2 {0}
       run: |
-        pacman -S --needed --noconfirm \
-          mingw-w64-x86_64-autotools \
-          mingw-w64-x86_64-cmake \
-          mingw-w64-x86_64-glew \
-          mingw-w64-x86_64-libarchive \
-          mingw-w64-x86_64-make \
-          mingw-w64-x86_64-meson \
-          mingw-w64-x86_64-python-pip \
-          mingw-w64-x86_64-python-psutil \
-          mingw-w64-x86_64-toolchain \
-          bison \
-          flex \
-          git \
-          nasm \
-          p7zip \
-          patch \
-          unzip \
-          zip
-
+        pacman -Sy --needed --noconfirm \
+              mingw-w64-x86_64-autotools \
+              mingw-w64-x86_64-cmake \
+              mingw-w64-x86_64-cmake-cmcldeps \
+              mingw-w64-x86_64-glew \
+              mingw-w64-x86_64-libarchive \
+              mingw-w64-x86_64-make \
+              mingw-w64-x86_64-meson \
+              mingw-w64-x86_64-python-pip \
+              mingw-w64-x86_64-python-psutil \
+              mingw-w64-x86_64-toolchain \
+              autoconf  \
+              automake \
+              bison \
+              flex \
+              git \
+              libtool \
+              nasm \
+              p7zip \
+              patch \
+              unzip \
+              zip
         SETUPTOOLS_USE_DISTUTILS=stdlib pip install py7zr
+        export PATH=/c/msys64/bin:$PATH
         cd /c/msys64 && ln -sfr . msys64
         cd /c/Qt && ln -sfr . Qt && ln -sfr . Qt5.15.2
         cd /c
         git clone --recursive https://github.com/AcademySoftwareFoundation/OpenRV.git
         cd /c/OpenRV
-        shopt -s expand_aliases
+        export ACLOCAL_PATH=/usr/share/aclocal
         source ./rvcmds.sh
         rvbootstrap Release
         rvinst
-
+        
     - name: Upload artifact
       uses: actions/upload-pages-artifact@v1
       with: 
