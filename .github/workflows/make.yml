@@ -77,6 +77,8 @@ jobs:
     - name: Fix missing library from jurplel/install-qt-action
       shell: powershell
       run: |
+        cp -r C:\qttemp\Qt\5.15.2\msvc2019_64\resources\ C:\Qt\5.15.2\msvc2019_64\resources -ErrorAction SilentlyContinue
+
         @("QtBodymovin", "QtCharts", "QtDataVisualization", "QtNetworkAuth", "QtQuick3D", "QtQuick3DAssetImport", "QtQuick3DRender", "QtQuick3DRuntimeRender", "QtQuick3DUtils", "QtScript", "QtScriptTools", "QtVirtualKeyboard", "QtWebEngine", "QtWebEngineWidgets", "QtWebEngineCore", "QtVirtualKeyboard") | ForEach-Object {
           cp -r C:\qttemp\Qt\5.15.2\msvc2019_64\include\$_\ C:\Qt\5.15.2\msvc2019_64\include\$_ -ErrorAction SilentlyContinue
         }
