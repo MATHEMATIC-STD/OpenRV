@@ -38,8 +38,8 @@ jobs:
         path: ${{ env.QT5_TEMP_ROOT_DIR }}
         key: ${{ runner.os }}-qttemp-5.15.2
 
-    - name: MSVC
-      uses: ilammy/msvc-dev-cmd@v1.4.1
+    # - name: MSVC
+    #   uses: ilammy/msvc-dev-cmd@v1.4.1
     
     - name: Clean cache QT
       if: steps.init_qt_cache.outputs.cache-hit != 'true'
