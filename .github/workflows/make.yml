@@ -251,6 +251,7 @@ jobs:
         git clone --recursive https://github.com/AcademySoftwareFoundation/OpenRV.git
         cd /c/OpenRV
         export ACLOCAL_PATH=/usr/share/aclocal
+        shopt -s expand_aliases
         source ./rvcmds.sh
         rvbootstrap Release
         rvinst
