@@ -11,15 +11,13 @@
 
 ## 1. Install Microsoft Visual Studio
 
-Install Microsoft Visual Studio 2017 & 2019.
+Install Microsoft Visual Studio 2022.
 
-Any edition of Microsoft Visual Studio 2019 should do, even the Microsoft Visual Studio 2019 Community Edition. Download it from the Microsoft [older downloads page](https://visualstudio.microsoft.com/vs/older-downloads/).
+Any edition of Microsoft Visual Studio 2022 should do, even the Microsoft Visual Studio 2022 Community Edition. Download it from the Microsoft [older downloads page](https://visualstudio.microsoft.com/vs/older-downloads/).
 
 Make sure to select the "Desktop development with C++" and the latest SDK for Windows 10 or Windows 11 features when installing Microsoft Visual Studio.
 
 You select the Windows SDK based on the target Windows version you plan on running the compiled application on.
-
-Note: The current version of PySide2 required by RV (5.15.2.1) cannot be built with Microsoft Visual Studio 2019 : it can only be built with Microsoft Visual Studio 2017. Therefore, Microsoft Visual Studio 2017 needs to be installed as well.
 
 ## 2. Install Qt
 
@@ -39,9 +37,9 @@ Download and install the 64-bit version of [Strawberry Perl](https://strawberryp
 
 Download and install the latest [MSYS2](https://www.msys2.org/).
 
-Note that RV is NOT a mingw64 build. It is a Microscoft Visual Studio 2019 build.
+Note that RV is NOT a mingw64 build. It is a Microscoft Visual Studio 2022 build.
 
-RV is built with Microsoft Visual Studio 2019 via the cmake "Visual Studio 16 2019" generator.
+RV is built with Microsoft Visual Studio 2022 via the cmake "Visual Studio 17 2022" generator.
 
 msys2 is only used for convenience as it comes with a package manager with utility packages required for the RV build such as cmake, git, flex, bison, nasm, unzip, zip, etc.
 
@@ -51,12 +49,15 @@ Additional information can be found on the [MSYS2 github](https://github.com/msy
 
 ## 5. Install required MSYS2 pacman packages
 
+![MSYS2-MinGW64](../images/rv-msys2-mingw64-shortcut.png)
+
 From an MSYS2-MinGW64 shell, install the following packages which are required to build RV:
 
 ```shell
-pacman -S --needed \
+pacman -Sy --needed \
         mingw-w64-x86_64-autotools \
         mingw-w64-x86_64-cmake \
+        mingw-w64-x86_64-cmake-cmcldeps \
         mingw-w64-x86_64-glew \
         mingw-w64-x86_64-libarchive \
         mingw-w64-x86_64-make \
@@ -64,9 +65,12 @@ pacman -S --needed \
         mingw-w64-x86_64-python-pip \
         mingw-w64-x86_64-python-psutil \
         mingw-w64-x86_64-toolchain \
+        autoconf  \
+        automake \
         bison \
         flex \
         git \
+        libtool \
         nasm \
         p7zip \
         patch \
@@ -80,9 +84,12 @@ Note: To confirm which version/location of any tool used inside the MSYS shell, 
 
 ### Setting the PATH
 
-The path to mingw's bin must be added e.g. `msys64/mingw64/bin`.
+The path to MSYS2's mingw64/bin folder must be added to the path.
+To set your PATH correctly: edit the MSYS2's ~/.bashrc file and add the following line:
+`PATH=/c/msys64/mingw64/bin:${PATH}`
 
-To set your PATH correctly: you can edit the MSYS ~/.bashrc or alter (untested) the Windows Path EnvVar. In ~/.bashrc, add a line `PATH=<mingw64 bin>:PATH` such as `PATH=/c/msys64/mingw64/bin:PATH` which will put Python and Ninja before `PATH` which contains `msys64/usr/bin`.
+Also add the following line to your ~/.bashrc file:
+`export ACLOCAL_PATH=/c/msys64/usr/share/aclocal/`
 
 ### Python
 
@@ -107,6 +114,14 @@ If you have your own install of CMake on your computer, your PATH will need to p
 Symptoms of using Windows' (and not mingw64) CMake:
 - During the build, Python scripts such as quoteFile.py, make_openssl.py and make_python.py fail: either they don't work or they aren't found.
 - `build.ninja not found` during the build of a dependency. (cmake/dependencies) Reason: CMake in ExternalProject_Add *configured* the Project with the Visual Studio Generator whereas OpenRV's ExternalProject_Add build command expects that Ninja will be used.
+
+
+### NOTE: Before starting a build
+
+To maximize your chances of successfully building RV, you must:
+- Fully update your code base to the latest version (or the version you want to use) with a command like `git pull`.
+- Fix all conflicts due to updating the code.
+- Revisit all modified files to ensure they aren't using old code that changed during the update such as when the Visual Studio version changes.
 
 ### NOTE: Path Length
 
