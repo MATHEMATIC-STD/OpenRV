@@ -86,7 +86,7 @@ jobs:
         }
 
         @("Qt5BodyMovin", "Qt5Charts", "Qt5NetworkAuth", "Qt5Quick3D", "Qt5Quick3DAssetImport", "Qt5Quick3DRender", "Qt5Quick3DRuntimeRender", "Qt5Quick3DUtils", "Qt5Script", "Qt5ScriptTools", "Qt5VirtualKeyboard", "Qt5WebEngine", "Qt5WebEngineCore", "Qt5WebEngineWidgets", "Qt5VirtualKeyboard") | ForEach-Object {
-          cp -r C:\qttemp\5.15.2\msvc2019_64\lib\cmake\$_ C:\Qt\5.15.2\msvc2019_64\lib\cmake\$_ -ErrorAction SilentlyContinue
+          cp -r C:\qttemp\Qt\5.15.2\msvc2019_64\lib\cmake\$_ C:\Qt\5.15.2\msvc2019_64\lib\cmake\$_ -ErrorAction SilentlyContinue
           cp C:\qttemp\Qt\5.15.2\msvc2019_64\lib\$_.lib C:\Qt\5.15.2\msvc2019_64\lib -ErrorAction SilentlyContinue
           cp C:\qttemp\Qt\5.15.2\msvc2019_64\lib\$_"d.lib" C:\Qt\5.15.2\msvc2019_64\lib -ErrorAction SilentlyContinue
           cp C:\qttemp\Qt\5.15.2\msvc2019_64\lib\$_.prl C:\Qt\5.15.2\msvc2019_64\lib -ErrorAction SilentlyContinue
